@@ -209,6 +209,27 @@ datadocs http render \
 
 The parsed JSON response is used directly as `data`.
 
+The SDK HTTP source currently supports JSON responses. Use `transform` to adapt
+API-specific response envelopes before they reach a `Document`:
+
+```python
+from datadocs import Document
+from datadocs.http import HttpSource
+
+source = HttpSource(
+    url="https://api.example.com/report",
+    headers={"Authorization": "Bearer token"},
+    response_format="json",
+    transform=lambda data: data["data"]["items"],
+)
+
+doc = Document(template_path="report.md.j2", source=source)
+```
+
+`response_format="json"` is the only implemented response format for now. The
+argument is explicit so future formats such as text or bytes can be added without
+changing the default behavior.
+
 ## BigQuery
 
 BigQuery authentication uses Google Application Default Credentials. `datadocs`
@@ -246,6 +267,42 @@ Period: {{ params.period }}
 ## {{ epic.name }}
 {% endfor %}
 ```
+
+## Smoke tests
+
+Opt-in smoke tests and demos live under `smoke/`. They are intentionally kept
+outside the normal `tests/` suite because they use real external services.
+
+The countries smoke test fetches nested JSON from REST Countries, loads it into
+BigQuery with a rendered SQL template, queries it back, and renders a Markdown
+report.
+
+Install the optional integration dependencies:
+
+```bash
+uv sync --extra dev --extra http --extra bigquery
+```
+
+Authenticate with Google Application Default Credentials:
+
+```bash
+gcloud auth application-default login
+```
+
+Run the smoke test:
+
+```bash
+DATADOCS_BQ_PROJECT=bigquery-sandbox-cpvuft6h \
+DATADOCS_BQ_DATASET=test_datadocs \
+DATADOCS_BQ_LOCATION=EU \
+DATADOCS_COUNTRIES_API_TOKEN=your-rest-countries-token \
+uv run python smoke/countries/run.py
+```
+
+The script prints only the generated report to stdout. If the configured dataset
+already exists, the smoke test reuses it and does not delete it. If the script
+creates the dataset, it deletes it by default unless `DATADOCS_SMOKE_KEEP_DATASET=1`
+is set. See `smoke/countries/README.md` for sample output and cleanup controls.
 
 ## Future integrations
 

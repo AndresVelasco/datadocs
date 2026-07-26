@@ -1,0 +1,27 @@
+CREATE OR REPLACE TABLE `{{ params.project }}.{{ params.dataset }}.countries`
+OPTIONS (
+  expiration_timestamp = TIMESTAMP_ADD(
+    CURRENT_TIMESTAMP(),
+    INTERVAL {{ params.table_expiration_hours }} HOUR
+  )
+) AS
+WITH raw AS (
+  SELECT PARSE_JSON(@countries_json) AS countries
+)
+SELECT
+  JSON_VALUE(country, '$.codes.alpha_2') AS country_code,
+  JSON_VALUE(country, '$.names.common') AS country_name,
+  JSON_VALUE(country, '$.names.official') AS official_name,
+  ARRAY_TO_STRING(JSON_VALUE_ARRAY(country, '$.capitals'), ', ') AS capitals,
+  SAFE_CAST(JSON_VALUE(country, '$.population') AS INT64) AS population,
+  JSON_VALUE(country, '$.region') AS region,
+  JSON_VALUE(country, '$.subregion') AS subregion,
+  JSON_QUERY(country, '$.languages') AS languages,
+  JSON_QUERY(country, '$.currencies') AS currencies,
+  JSON_QUERY(country, '$.capital_coordinates') AS capital_info,
+  JSON_QUERY(country, '$.borders') AS borders,
+  JSON_QUERY(country, '$.timezones') AS timezones,
+  JSON_VALUE(country, '$.flag.png') AS flag_png,
+  JSON_VALUE(country, '$.maps.google') AS google_maps,
+  CURRENT_TIMESTAMP() AS fetched_at
+FROM raw, UNNEST(JSON_QUERY_ARRAY(countries)) AS country;

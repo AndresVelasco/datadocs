@@ -1,3 +1,6 @@
+import pytest
+
+from datadocs.exceptions import SourceError
 from datadocs.http.source import HttpSource
 
 
@@ -29,3 +32,26 @@ def test_http_source_loads_json(mocker):
         json={"team": "platform"},
     )
 
+
+def test_http_source_transforms_json(mocker):
+    mocker.patch(
+        "httpx.request",
+        return_value=Response(),
+    )
+
+    source = HttpSource(
+        url="https://example.com/api",
+        transform=lambda data: data["name"],
+    )
+
+    assert source.load_data() == "Platform"
+
+
+def test_http_source_rejects_unsupported_response_format():
+    source = HttpSource(
+        url="https://example.com/api",
+        response_format="text",  # type: ignore[arg-type]
+    )
+
+    with pytest.raises(SourceError, match="Unsupported HTTP response format"):
+        source.load_data()

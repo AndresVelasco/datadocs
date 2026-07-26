@@ -1,0 +1,16 @@
+SELECT
+  country_code,
+  country_name,
+  official_name,
+  capitals,
+  population,
+  region,
+  subregion,
+  TO_JSON_STRING(languages) AS languages_json,
+  TO_JSON_STRING(currencies) AS currencies_json,
+  flag_png,
+  google_maps,
+  fetched_at
+FROM `{{ params.project }}.{{ params.dataset }}.countries`
+ORDER BY population DESC
+LIMIT 20;

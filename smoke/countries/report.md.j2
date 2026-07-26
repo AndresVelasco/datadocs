@@ -1,0 +1,20 @@
+# REST Countries BigQuery Smoke Report
+
+Project: `{{ params.project }}`
+
+Dataset: `{{ params.dataset }}`
+
+Rows shown: {{ data | length }}
+
+{% for country in data %}
+## {{ loop.index }}. {{ country.country_name }}
+
+- Official name: {{ country.official_name }}
+- Capital: {{ country.capitals or "n/a" }}
+- Region: {{ country.region }}{% if country.subregion %} / {{ country.subregion }}{% endif %}
+- Population: {{ "{:,}".format(country.population or 0) }}
+- Languages JSON: `{{ country.languages_json }}`
+- Currencies JSON: `{{ country.currencies_json }}`
+- Map: {{ country.google_maps or "n/a" }}
+
+{% endfor %}
