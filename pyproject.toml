@@ -6,11 +6,31 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "MIT" }
 authors = [{ name = "Andres Velasco Garcia" }]
+keywords = ["documents", "jinja", "markdown", "templates", "reports"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Documentation",
+    "Topic :: Text Processing :: Markup",
+]
 dependencies = [
     "jinja2>=3.1",
     "pyyaml>=6.0",
     "typer>=0.12",
 ]
+
+[project.urls]
+Homepage = "https://github.com/AndresVelasco/datadocs"
+Repository = "https://github.com/AndresVelasco/datadocs"
+Issues = "https://github.com/AndresVelasco/datadocs/issues"
 
 [project.optional-dependencies]
 bigquery = ["google-cloud-bigquery>=3.0"]
@@ -21,6 +41,7 @@ dev = [
     "ruff>=0.5",
     "mypy>=1.10",
     "types-PyYAML>=6.0",
+    "twine>=6.0",
 ]
 
 [project.scripts]
