@@ -1,7 +1,7 @@
 import sys
 import types
 
-from datadoc.bigquery.source import BigQuerySource, QueryParameter
+from datadocs.bigquery.source import BigQuerySource, QueryParameter
 
 
 class Row:

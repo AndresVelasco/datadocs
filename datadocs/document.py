@@ -3,9 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from datadoc.exceptions import ConfigurationError
-from datadoc.render import render
-from datadoc.sources.protocol import Source
+from datadocs.exceptions import ConfigurationError
+from datadocs.render import render
+from datadocs.sources.protocol import Source
 
 
 class Document:

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from datadoc.exceptions import SourceError
+from datadocs.exceptions import SourceError
 
 
 @dataclass(frozen=True)
@@ -36,7 +36,7 @@ class BigQuerySource:
         except ImportError as exc:
             raise SourceError(
                 "BigQuery integration requires the 'bigquery' extra: "
-                "pip install datadoc[bigquery]"
+                "pip install datadocs[bigquery]"
             ) from exc
 
         try:

@@ -4,10 +4,10 @@ from typing import Annotated, Any
 
 import typer
 
-from datadoc._cli_utils import parse_key_value, write_output
-from datadoc.document import Document
-from datadoc.exceptions import DatadocError
-from datadoc.loaders import load_data
+from datadocs._cli_utils import parse_key_value, write_output
+from datadocs.document import Document
+from datadocs.exceptions import DatadocsError
+from datadocs.loaders import load_data
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -26,19 +26,19 @@ def render(
             params=parse_key_value(param or []),
         )
         write_output(document.render(), output)
-    except DatadocError as exc:
+    except DatadocsError as exc:
         raise typer.BadParameter(str(exc)) from exc
 
 
 try:
-    from datadoc.http.cli import app as http_app
+    from datadocs.http.cli import app as http_app
 
     app.add_typer(http_app, name="http")
 except ImportError:  # pragma: no cover
     pass
 
 try:
-    from datadoc.bigquery.cli import app as bigquery_app
+    from datadocs.bigquery.cli import app as bigquery_app
 
     app.add_typer(bigquery_app, name="bigquery")
 except ImportError:  # pragma: no cover

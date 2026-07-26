@@ -1,8 +1,8 @@
-# datadoc
+# datadocs
 
 Generate documents from structured data.
 
-`datadoc` generates Markdown, HTML, or text documents from structured data using
+`datadocs` generates Markdown, HTML, or text documents from structured data using
 Jinja templates.
 
 The philosophy is simple:
@@ -11,7 +11,7 @@ The philosophy is simple:
 
 ## What it is
 
-`datadoc` is a small Python package for rendering documents from data you already
+`datadocs` is a small Python package for rendering documents from data you already
 prepared.
 
 Templates receive exactly two variables:
@@ -23,20 +23,20 @@ params
 
 ## What it is not
 
-`datadoc` is not a workflow engine, reporting platform, data transformation
+`datadocs` is not a workflow engine, reporting platform, data transformation
 framework, query builder, or AI framework.
 
 ## Installation
 
 ```bash
-pip install datadoc
+pip install datadocs
 ```
 
 Optional integrations:
 
 ```bash
-pip install "datadoc[http]"
-pip install "datadoc[bigquery]"
+pip install "datadocs[http]"
+pip install "datadocs[bigquery]"
 ```
 
 ## CLI
@@ -44,7 +44,7 @@ pip install "datadoc[bigquery]"
 Render from JSON, YAML, or NDJSON:
 
 ```bash
-datadoc render \
+datadocs render \
   --template report.md.j2 \
   --data report.json
 ```
@@ -52,7 +52,7 @@ datadoc render \
 Write to a file:
 
 ```bash
-datadoc render \
+datadocs render \
   --template report.md.j2 \
   --data report.yaml \
   --output report.md
@@ -61,7 +61,7 @@ datadoc render \
 Pass template parameters:
 
 ```bash
-datadoc render \
+datadocs render \
   --template report.md.j2 \
   --data report.ndjson \
   --param period="Q2 2026"
@@ -70,7 +70,7 @@ datadoc render \
 ## SDK
 
 ```python
-from datadoc import render
+from datadocs import render
 
 markdown = render(
     template_path="templates/report.md.j2",
@@ -82,7 +82,7 @@ markdown = render(
 Use `Document` with data:
 
 ```python
-from datadoc import Document
+from datadocs import Document
 
 doc = Document(
     template_path="templates/report.md.j2",
@@ -111,7 +111,7 @@ def load_data(self):
 
 ## Architecture
 
-`datadoc` has one deterministic rendering path:
+`datadocs` has one deterministic rendering path:
 
 ```text
 Source or prepared data -> Document -> render() -> text
@@ -187,10 +187,10 @@ JSON, YAML, and NDJSON files, while integrations use sources.
 
 ## HTTP
 
-HTTP auth is passed through headers. `datadoc` does not manage credentials.
+HTTP auth is passed through headers. `datadocs` does not manage credentials.
 
 ```bash
-datadoc http render \
+datadocs http render \
   --url https://example.com/api \
   --header "Authorization=Bearer $TOKEN" \
   --query-param period="Q2 2026" \
@@ -200,7 +200,7 @@ datadoc http render \
 POST JSON from a file:
 
 ```bash
-datadoc http render \
+datadocs http render \
   --url https://example.com/api \
   --method POST \
   --json-body request.json \
@@ -211,11 +211,11 @@ The parsed JSON response is used directly as `data`.
 
 ## BigQuery
 
-BigQuery authentication uses Google Application Default Credentials. `datadoc`
+BigQuery authentication uses Google Application Default Credentials. `datadocs`
 does not expose credential flags.
 
 ```bash
-datadoc bigquery render \
+datadocs bigquery render \
   --query queries/report.sql \
   --template report.md.j2 \
   --project runtime-project \
@@ -226,13 +226,13 @@ datadoc bigquery render \
 Typed query parameters use `name:TYPE=value`:
 
 ```bash
-datadoc bigquery render \
+datadocs bigquery render \
   --query queries/report.sql \
   --template report.md.j2 \
   --query-param period:STRING="Q2 2026"
 ```
 
-The SQL file is executed as supplied. `datadoc` does not build or transform
+The SQL file is executed as supplied. `datadocs` does not build or transform
 queries.
 
 ## Template example
@@ -249,5 +249,5 @@ Period: {{ params.period }}
 
 ## Future integrations
 
-Future integrations such as `datadoc.langchain` should be optional layers on top
+Future integrations such as `datadocs.langchain` should be optional layers on top
 of the deterministic rendering pipeline.

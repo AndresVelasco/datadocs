@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from datadoc.exceptions import SourceError
+from datadocs.exceptions import SourceError
 
 
 class HttpSource:
@@ -26,7 +26,7 @@ class HttpSource:
             import httpx
         except ImportError as exc:
             raise SourceError(
-                "HTTP integration requires the 'http' extra: pip install datadoc[http]"
+                "HTTP integration requires the 'http' extra: pip install datadocs[http]"
             ) from exc
 
         try:

@@ -4,11 +4,11 @@ from typing import Annotated, Literal
 
 import typer
 
-from datadoc._cli_utils import parse_key_value, write_output
-from datadoc.document import Document
-from datadoc.exceptions import DatadocError
-from datadoc.http.source import HttpSource
-from datadoc.loaders import load_json
+from datadocs._cli_utils import parse_key_value, write_output
+from datadocs.document import Document
+from datadocs.exceptions import DatadocsError
+from datadocs.http.source import HttpSource
+from datadocs.loaders import load_json
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -38,5 +38,5 @@ def render(
             params=parse_key_value(param or []),
         )
         write_output(document.render(), output)
-    except DatadocError as exc:
+    except DatadocsError as exc:
         raise typer.BadParameter(str(exc)) from exc

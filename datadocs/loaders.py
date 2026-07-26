@@ -6,7 +6,7 @@ from typing import Any
 
 import yaml
 
-from datadoc.exceptions import DataLoadError
+from datadocs.exceptions import DataLoadError
 
 
 def load_json(path: str) -> Any:

@@ -1,7 +1,7 @@
 import pytest
 
-from datadoc import Document
-from datadoc.exceptions import ConfigurationError
+from datadocs import Document
+from datadocs.exceptions import ConfigurationError
 
 
 class StaticSource:

@@ -1,4 +1,4 @@
-from datadoc import render
+from datadocs import render
 
 
 def test_render_passes_data_and_params(tmp_path):

@@ -6,7 +6,7 @@ from typing import Any
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, TemplateNotFound
 from jinja2 import TemplateError as JinjaTemplateError
 
-from datadoc.exceptions import TemplateError
+from datadocs.exceptions import TemplateError
 
 
 def render(

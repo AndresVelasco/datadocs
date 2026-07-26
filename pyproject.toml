@@ -1,5 +1,5 @@
 [project]
-name = "datadoc"
+name = "datadocs"
 version = "0.1.0"
 description = "Generate documents from structured data."
 readme = "README.md"
@@ -24,7 +24,7 @@ dev = [
 ]
 
 [project.scripts]
-datadoc = "datadoc.cli:app"
+datadocs = "datadocs.cli:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -42,4 +42,4 @@ python_version = "3.11"
 strict = true
 warn_unreachable = true
 warn_unused_ignores = true
-files = ["datadoc"]
+files = ["datadocs"]

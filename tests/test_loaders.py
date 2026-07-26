@@ -1,7 +1,7 @@
 import pytest
 
-from datadoc.exceptions import DataLoadError
-from datadoc.loaders import load_data, load_json, load_ndjson, load_yaml
+from datadocs.exceptions import DataLoadError
+from datadocs.loaders import load_data, load_json, load_ndjson, load_yaml
 
 
 def test_load_json(tmp_path):

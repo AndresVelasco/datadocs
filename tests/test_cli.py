@@ -1,8 +1,8 @@
 from typer.testing import CliRunner
 
-import datadoc.bigquery.source
-import datadoc.http.source
-from datadoc.cli import app
+import datadocs.bigquery.source
+import datadocs.http.source
+from datadocs.cli import app
 
 
 def test_cli_render_stdout(tmp_path):
@@ -58,7 +58,7 @@ def test_http_cli_render_uses_source_options(mocker, tmp_path):
     template.write_text("{{ params.period }}: {{ data.name }}", encoding="utf-8")
     body.write_text('{"team": "platform"}', encoding="utf-8")
     load_data = mocker.patch.object(
-        datadoc.http.source.HttpSource,
+        datadocs.http.source.HttpSource,
         "load_data",
         return_value={"name": "Platform"},
     )
@@ -96,7 +96,7 @@ def test_bigquery_cli_render_uses_source_options(mocker, tmp_path):
     template.write_text("{{ data[0].name }}", encoding="utf-8")
     query.write_text("select @period as period", encoding="utf-8")
     load_data = mocker.patch.object(
-        datadoc.bigquery.source.BigQuerySource,
+        datadocs.bigquery.source.BigQuerySource,
         "load_data",
         return_value=[{"name": "Platform"}],
     )

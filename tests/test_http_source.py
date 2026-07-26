@@ -1,4 +1,4 @@
-from datadoc.http.source import HttpSource
+from datadocs.http.source import HttpSource
 
 
 class Response:
