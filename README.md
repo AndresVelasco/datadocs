@@ -304,6 +304,45 @@ already exists, the smoke test reuses it and does not delete it. If the script
 creates the dataset, it deletes it by default unless `DATADOCS_SMOKE_KEEP_DATASET=1`
 is set. See `smoke/countries/README.md` for sample output and cleanup controls.
 
+## Manual PyPI publishing
+
+Publishing is currently manual. PyPI versions are immutable, so verify the package
+before uploading a release.
+
+Build and validate the distribution artifacts:
+
+```bash
+uv build
+uv run python -m twine check dist/*
+```
+
+Upload to PyPI:
+
+```bash
+uv run python -m twine upload dist/*
+```
+
+Use a real PyPI API token when prompted. If you use `~/.pypirc`, keep it outside
+the repository and restrict its permissions:
+
+```bash
+chmod 600 ~/.pypirc
+```
+
+Recommended release hygiene:
+
+```bash
+git status
+uv run python -m pytest
+uv run ruff check .
+uv run python -m mypy
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+Tagging is not required for manual upload, but it records the exact source used
+for the published version.
+
 ## Future integrations
 
 Future integrations such as `datadocs.langchain` should be optional layers on top
