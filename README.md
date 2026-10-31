@@ -304,44 +304,71 @@ already exists, the smoke test reuses it and does not delete it. If the script
 creates the dataset, it deletes it by default unless `DATADOCS_SMOKE_KEEP_DATASET=1`
 is set. See `smoke/countries/README.md` for sample output and cleanup controls.
 
-## Manual PyPI publishing
+## Development and publishing
 
-Publishing is currently manual. PyPI versions are immutable, so verify the package
-before uploading a release.
-
-Build and validate the distribution artifacts:
+The tracked `uv.lock` keeps development and CI dependencies aligned. Install
+the locked environment and run the checks with:
 
 ```bash
-uv build
-uv run python -m twine check dist/*
+uv sync --locked --all-extras
+uv run --locked --all-extras python -m pytest -q
+uv run --locked --all-extras ruff check .
+uv run --locked --all-extras python -m mypy
 ```
 
-Upload to PyPI:
+CI runs on Python 3.11–3.14 on Linux, plus Python 3.12 on Windows and macOS.
+It builds the wheel and source distribution and validates their metadata.
+The automated checks use mocked integrations; the external countries smoke
+test above remains opt-in.
+
+`.github/workflows/publish.yml` publishes only after successful checks:
+
+| Event | Result |
+| --- | --- |
+| Pull request | Tests and distribution builds; no publishing. |
+| New `main` commit with the same version as the latest release tag | Development build on TestPyPI. |
+| `main` commit with a version above the latest release tag | Create the matching version tag and publish to PyPI. |
+| Push of a matching `vMAJOR.MINOR.PATCH` tag | Verify the tag and tests, then publish to PyPI. |
+| No release tags yet | Development builds on TestPyPI until the first release is explicitly tagged. |
+
+The existing `v0.1.0` tag is preserved. With `version = "0.1.0"`, a new `main`
+commit publishes a development version such as `0.1.1.dev1230001` to TestPyPI.
+The suffix includes the workflow run ID and attempt, so retries get distinct
+development versions. That version is applied only in the build checkout;
+the repository's version is unchanged.
+
+To request the next production release, update the version and lockfile:
 
 ```bash
-uv run python -m twine upload dist/*
+uv version 0.1.1
 ```
 
-Use a real PyPI API token when prompted. If you use `~/.pypirc`, keep it outside
-the repository and restrict its permissions:
+Commit `pyproject.toml` and `uv.lock`, preferably in a release PR, and merge into
+`main`. `pyproject.toml` is the version source. Release versions use stable
+`MAJOR.MINOR.PATCH` numbers, compared with Python packaging version rules.
+The workflow rejects regressions and tag/version mismatches and never moves an
+existing tag. Tags identify the commit CI actually tested. A failed upload can
+be retried on that tagged commit without changing the release version.
 
-```bash
-chmod 600 ~/.pypirc
-```
+Before uploading, the publishing workflow installs both the wheel and source
+distribution in isolated environments. Each installation must report the
+expected distribution version and render a sample document through both the
+SDK and the installed `datadocs` command.
 
-Recommended release hygiene:
+Publishing uses OIDC trusted publishers, with no stored PyPI API token. The
+publisher settings on each registry must match this workflow:
 
-```bash
-git status
-uv run python -m pytest
-uv run ruff check .
-uv run python -m mypy
-git tag v0.1.0
-git push origin v0.1.0
-```
+| Setting | PyPI | TestPyPI |
+| --- | --- | --- |
+| Project | `datadocs` | `datadocs` |
+| Repository owner | `AndresVelasco` | `AndresVelasco` |
+| Repository | `datadocs` | `datadocs` |
+| Workflow filename | `publish.yml` | `publish.yml` |
+| GitHub environment | `pypi` | `testpypi` |
 
-Tagging is not required for manual upload, but it records the exact source used
-for the published version.
+The environment field in the publisher configuration is optional; if supplied,
+it must match the corresponding job. See the
+[PyPI trusted-publishing documentation](https://docs.pypi.org/trusted-publishers/).
 
 ## Future integrations
 
