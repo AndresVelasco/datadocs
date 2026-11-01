@@ -1,6 +1,6 @@
 [project]
 name = "datadocs"
-version = "0.1.0"
+version = "0.1.1"
 description = "Generate documents from structured data."
 readme = "README.md"
 requires-python = ">=3.11"
